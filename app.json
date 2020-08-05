@@ -1,9 +1,9 @@
 {
-  "name": "ShowsApp",
-  "displayName": "ShowsApp",
+  "name": "ChatApp",
+  "displayName": "ChatApp",
   "expo": {
-    "name": "ShowsApp",
-    "slug": "ShowsApp",
+    "name": "ChatApp",
+    "slug": "ChatApp",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
