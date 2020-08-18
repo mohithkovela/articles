@@ -10,17 +10,14 @@ import {
 import { makeHTTPRequest } from "../../Services/http";
 import Icon from "react-native-vector-icons/Feather";
 
-export default class Inbox extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      articles: [],
-    };
-  }
+import { connect } from "react-redux";
+import { updateData } from "../../actions/updatedata";
+import { bindActionCreators } from "redux";
 
+class Inbox extends Component {
   componentDidMount() {
+    let { articles, actions } = this.props;
     let uri = "http://firstmed.azurewebsites.net/api/GetArticles";
-
     let payload = {
       CustomerId: 5879,
       LastUpdatedTimeTicks: 0,
@@ -33,18 +30,19 @@ export default class Inbox extends Component {
       },
       body: JSON.stringify(payload),
     }).then((response) => {
-      this.setState({
-        articles: response.Response.articles,
-      });
+      articles = response.Response.articles;
+      actions.updateData(articles);
     });
   }
 
   render() {
+    const articles = this.props.articles.articles;
+
     return (
       <View style={styles.container}>
         <FlatList
           initialNumToRender={51}
-          data={this.state.articles}
+          data={articles}
           keyExtractor={(object, index) => index.toString()}
           renderItem={(article) => (
             <ListItem navigation={this.props.navigation} data={article} />
@@ -151,3 +149,14 @@ class ListItem extends Component {
     this.props.navigation.push("Chat", article);
   }
 }
+
+const mapStateToProps = (state) => ({
+  articles: state.articles,
+});
+
+const ActionCreators = Object.assign({}, { updateData });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(ActionCreators, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Inbox);
